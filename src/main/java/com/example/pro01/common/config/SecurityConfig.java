@@ -16,18 +16,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    // Swagger 관련 URL을 배열로 관리
     private static final String[] SWAGGER_WHITELIST = {
-            "/v2/api-docs",
-            "/v3/api-docs",
             "/v3/api-docs/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
             "/swagger-ui/**",
-            "/webjars/**",
             "/swagger-ui.html"
+    };
+
+    private static final String[] PUBLIC_API_WHITELIST = {
+            "/api/auth/login",
+            "/api/auth/register"
     };
 
     @Bean
@@ -38,13 +35,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 세션 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(SWAGGER_WHITELIST).permitAll() // Swagger 관련 URL 허용
+                        .requestMatchers(PUBLIC_API_WHITELIST).permitAll() // 공개 API 허용
                         .anyRequest().authenticated() // 기타 요청은 인증 필요
                 );
 
         return http.build();
     }
 
-    // CORS 설정 메서드 추가
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -58,3 +55,4 @@ public class SecurityConfig {
         return source;
     }
 }
+
