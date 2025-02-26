@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Getter
-@MappedSuperclass       // JPA에서 공통 매핑 정보를 상속 받는 클래스에 제공
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
     @CreatedDate

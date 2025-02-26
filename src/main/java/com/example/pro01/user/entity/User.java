@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity(name = "users")
-public class Users extends BaseEntity {
+public class User extends BaseEntity {
     @Column(nullable = false)
     private String username;
 }
