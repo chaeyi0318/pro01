@@ -2,6 +2,7 @@ package com.example.pro01.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,8 +24,8 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_API_WHITELIST = {
-            "/api/auth/login",
-            "/api/auth/register"
+            "/api/user/login",
+            "/api/user/signup"
     };
 
     @Bean
@@ -35,7 +36,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless 세션 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(SWAGGER_WHITELIST).permitAll() // Swagger 관련 URL 허용
-                        .requestMatchers(PUBLIC_API_WHITELIST).permitAll() // 공개 API 허용
+                        .requestMatchers(HttpMethod.POST, PUBLIC_API_WHITELIST).permitAll() // 공개 API 허용 (POST 메서드만)
                         .anyRequest().authenticated() // 기타 요청은 인증 필요
                 );
 
@@ -45,7 +46,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*"); // 모든 도메인 허용 (필요 시 특정 도메인으로 제한 가능)
+        configuration.addAllowedOrigin("http://localhost:8080"); // Swagger UI가 실행되는 도메인 (개발 환경)
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 인증 정보 포함 허용
@@ -55,4 +56,3 @@ public class SecurityConfig {
         return source;
     }
 }
-

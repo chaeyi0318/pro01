@@ -23,6 +23,6 @@ public class UserService {
         User user = new User(signupRequestDto.getUsername(), signupRequestDto.getPassword(), signupRequestDto.getNickname(), signupRequestDto.getEmail());
         userRepository.save(user);
 
-        return Message.toResponseEntity(USER_CREATED, user);
+        return Message.toResponseEntity(USER_CREATED);
     }
 }
