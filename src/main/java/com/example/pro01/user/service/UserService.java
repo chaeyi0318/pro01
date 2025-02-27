@@ -1,6 +1,7 @@
 package com.example.pro01.user.service;
 
 import com.example.pro01.common.exception.CustomException;
+import com.example.pro01.common.exception.ExceptionEnum;
 import com.example.pro01.common.exception.Message;
 import com.example.pro01.common.exception.SuccessEnum;
 import com.example.pro01.user.dto.SignupRequestDto;
@@ -13,7 +14,7 @@ import com.example.pro01.user.entity.User;
 
 import java.util.Optional;
 
-import static com.example.pro01.common.exception.ExceptionEnum.*;
+//import static com.example.pro01.common.exception.ExceptionEnum.*;
 import static com.example.pro01.common.exception.SuccessEnum.*;
 
 @Service
@@ -27,7 +28,7 @@ public class UserService {
         Optional<User> found = userRepository.findByUsername(signupRequestDto.getUsername());
 
         if (found.isPresent()) {
-            throw new CustomException(DUPLICATE_USERNAME);
+            throw new CustomException(ExceptionEnum.DUPLICATE_USERNAME);
         }
 
         userRepository.save(user);

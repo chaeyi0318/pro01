@@ -1,37 +1,32 @@
 package com.example.pro01.common.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Getter
 @Builder
-@NoArgsConstructor
+@AllArgsConstructor
 public class Message<T> {
 
     private boolean status;
     private String message;
     private T data;
 
-    public Message(boolean status, String message, T data) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
-    }
-
-    public static ResponseEntity<Message> toExceptionResponseEntity(ExceptionEnum exceptionEnum) {
+    public static ResponseEntity<Message> toExceptionResponseEntity(ExceptionEnum exceptionMessage) {
         return ResponseEntity
-                .status(exceptionEnum.getHttpStatus())
+                .status(exceptionMessage.getHttpStatus())
                 .body(Message.builder()
-                        .message(exceptionEnum.getMessage())
-                        .data(exceptionEnum)
+                        .status(!exceptionMessage.getHttpStatus().isError())
+                        .message(exceptionMessage.getMessage())
+                        .data(exceptionMessage)
                         .build()
                 );
     }
 
-    public static ResponseEntity<Message> toAllExceptionResponseEntity(HttpStatus httpStatus, String message, Object data) {
+    public static ResponseEntity<Message> toAllExceptionResponseEntity(HttpStatus httpStatus,String message, Object data) {
         return ResponseEntity
                 .status(httpStatus)
                 .body(Message.builder()
@@ -42,24 +37,24 @@ public class Message<T> {
                 );
     }
 
-    public static ResponseEntity<Message> toResponseEntity(SuccessEnum successEnum) {
+    public static ResponseEntity<Message> toResponseEntity(SuccessEnum successMessage) {
         return ResponseEntity
-                .status(successEnum.getHttpStatus())
+                .status(successMessage.getHttpStatus())
                 .body(Message.builder()
-                        .status(!successEnum.getHttpStatus().isError())
-                        .message(successEnum.getMessage())
-                        .data(successEnum)
+                        .status(!successMessage.getHttpStatus().isError())
+                        .message(successMessage.getMessage())
+                        .data(successMessage)
                         .build()
                 );
     }
 
     //리턴 값 있을때 사용
-    public static ResponseEntity<Message> toResponseEntity(SuccessEnum successEnum, Object data) {
+    public static ResponseEntity<Message> toResponseEntity(SuccessEnum successMessage, Object data) {
         return ResponseEntity
-                .status(successEnum.getHttpStatus())
+                .status(successMessage.getHttpStatus())
                 .body(Message.builder()
-                        .status(!successEnum.getHttpStatus().isError())
-                        .message(successEnum.getMessage())
+                        .status(!successMessage.getHttpStatus().isError())
+                        .message(successMessage.getMessage())
                         .data(data)
                         .build()
                 );
