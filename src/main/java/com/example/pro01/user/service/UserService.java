@@ -8,6 +8,8 @@ import com.example.pro01.user.dto.SignupRequestDto;
 import com.example.pro01.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.pro01.user.entity.User;
@@ -21,10 +23,17 @@ import static com.example.pro01.common.exception.SuccessEnum.*;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public ResponseEntity<Message> signupUser (SignupRequestDto signupRequestDto) {             // fix: 수정 필요
-        User user = new User(signupRequestDto.getUsername(), signupRequestDto.getPassword(), signupRequestDto.getNickname(), signupRequestDto.getEmail());
+    public ResponseEntity<Message> signupUser (SignupRequestDto signupRequestDto) {
+        User user = User.builder()
+                .username(signupRequestDto.getUsername())
+                .password(passwordEncoder.encode(signupRequestDto.getPassword()))
+                .email(signupRequestDto.getEmail())
+                .nickname(signupRequestDto.getNickname())
+                .build();
+
         Optional<User> found = userRepository.findByUsername(signupRequestDto.getUsername());
 
         if (found.isPresent()) {

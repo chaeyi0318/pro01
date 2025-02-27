@@ -22,15 +22,15 @@ public class ExceptionController {
         return Message.toAllExceptionResponseEntity(HttpStatus.BAD_REQUEST, ex.getFieldError().getDefaultMessage(), ex.getBindingResult().getTarget());
     }
 
-//    @ExceptionHandler({MissingRequestHeaderException.class})
-//    public ResponseEntity<Message> missingRequestHeaderException(MissingRequestHeaderException ex) {
-//        return Message.toAllExceptionResponseEntity(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_MEMBER.getDetail(), null);
-//    }
+// @ExceptionHandler({MissingRequestHeaderException.class})
+// public ResponseEntity<Message> missingRequestHeaderException(MissingRequestHeaderException ex) {
+// return Message.toAllExceptionResponseEntity(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_MEMBER.getDetail(), null);
+// }
 
-//    @ExceptionHandler({SignatureException.class})
-//    public ResponseEntity<Message> signatureException(SignatureException ex) {
-//        return Message.toAllExceptionResponseEntity(HttpStatus.UNAUTHORIZED, INVALID_TOKEN.getDetail(), null);
-//    }
+// @ExceptionHandler({SignatureException.class})
+// public ResponseEntity<Message> signatureException(SignatureException ex) {
+// return Message.toAllExceptionResponseEntity(HttpStatus.UNAUTHORIZED, INVALID_TOKEN.getDetail(), null);
+// }
 
     // 500
     @ExceptionHandler({Exception.class})
