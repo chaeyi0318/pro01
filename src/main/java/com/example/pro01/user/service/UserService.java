@@ -16,7 +16,7 @@ import com.example.pro01.user.entity.User;
 
 import java.util.Optional;
 
-//import static com.example.pro01.common.exception.ExceptionEnum.*;
+import static com.example.pro01.common.exception.ExceptionEnum.*;
 import static com.example.pro01.common.exception.SuccessEnum.*;
 
 @Service
@@ -27,6 +27,8 @@ public class UserService {
 
     @Transactional
     public ResponseEntity<Message> signupUser (SignupRequestDto signupRequestDto) {
+        isDuplicateEntry(signupRequestDto);
+
         User user = User.builder()
                 .username(signupRequestDto.getUsername())
                 .password(passwordEncoder.encode(signupRequestDto.getPassword()))
@@ -34,14 +36,19 @@ public class UserService {
                 .nickname(signupRequestDto.getNickname())
                 .build();
 
-        Optional<User> found = userRepository.findByUsername(signupRequestDto.getUsername());
-
-        if (found.isPresent()) {
-            throw new CustomException(ExceptionEnum.DUPLICATE_USERNAME);
-        }
-
         userRepository.save(user);
 
         return Message.toResponseEntity(USER_CREATED);
     }
+
+    public void isDuplicateEntry (SignupRequestDto signupRequestDto) {
+        if (userRepository.findByUsername(signupRequestDto.getUsername()).isPresent()) {
+            throw new CustomException(DUPLICATE_USERNAME);
+        } else if (userRepository.findByEmail(signupRequestDto.getEmail()).isPresent()) {
+            throw new CustomException(DUPLICATE_EMAIL);
+        } else if (userRepository.findByNickname(signupRequestDto.getNickname()).isPresent()) {
+            throw new CustomException(DUPLICATE_NICKNAME);
+        }
+    }
+
 }
